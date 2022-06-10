@@ -1,0 +1,23 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd server && npm run watch",
+    "client": "cd client && npm run start",
+    "watch": "npm run server & npm run client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saqib-002/cs4-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saqib-002/cs4-project/issues"
+  },
+  "homepage": "https://github.com/Saqib-002/cs4-project#readme"
+}
