@@ -13,8 +13,8 @@ import {getUserForLogin} from "../requests"
 const SignInPage=()=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
-    const getUser=async ()=>{
-        const user=await getUserForLogin(email,password);
+    const getUser=()=>{
+        const user=getUserForLogin(email,password);
         console.log(user);
     }
     const togglePassIcon=(e)=>{

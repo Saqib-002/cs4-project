@@ -2,7 +2,7 @@ const express=require("express");
 const {getUser}=require("./user.controller")
 const userRouter=express.Router();
 
-userRouter.get("/sign-in",getUser);
+userRouter.post("/sign-in",getUser);
 
 
 
