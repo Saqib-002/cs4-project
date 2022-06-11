@@ -10,7 +10,7 @@ import {togglePassIcon} from "./utils.pages"
 import { postUserForRegister } from "../requests";
 
 
-const RegisterPage=()=>{
+const RegisterPage=(props)=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [userName,setUserName]=useState("");
@@ -58,6 +58,8 @@ const RegisterPage=()=>{
                 dialoguebox.classList.add("bg-green-200");
                 dialoguebox.classList.add("text-green-800");
                 dialoguebox.firstChild.innerText="Successfully Registered";
+                props.setIsSignedIn(true);
+                props.setCurrentUser(response[0])
             }
         }
     }

@@ -13,7 +13,8 @@ import {togglePassIcon} from "./utils.pages"
 const SignInPage=(props)=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
-    const getUser=async()=>{
+    const getUser=async(e)=>{
+        e.preventDefault();
         const user=await postUserForLogin(email,password);
         console.log(user);
         const dialogue=document.getElementById("dialogue"); 
@@ -24,6 +25,7 @@ const SignInPage=(props)=>{
             dialogue.classList.remove("bg-red-200");
             dialogue.innerText="Successfully login"
             props.setIsSignedIn(true);
+            props.setCurrentUser(user[0])
         }else{
             dialogue.classList.remove("text-green-700");
             dialogue.classList.remove("bg-green-200");
