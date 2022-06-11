@@ -8,7 +8,7 @@ export const postUserForLogin=async(email,password)=>{
         },
         body: JSON.stringify({email,password})
     });
-    return await response.status;
+    return [await response.json(),response.status];
 } 
 export const postUserForRegister=async(email,password,username,day,month,year)=>{
     const response=await fetch(`${API_URL}/register`,{

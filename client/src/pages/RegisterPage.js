@@ -46,6 +46,7 @@ const RegisterPage=()=>{
         }
         else{
             const response= await postUserForRegister(email,password,userName,day,month,year);
+            console.log(response);
             if(response[1]===409&&response[0].error==="un_username"){
                 dialoguebox.firstChild.innerText="Username already taken by someone!!!";
             }else if(response[1]===409&&response[0].error==="un_email"){

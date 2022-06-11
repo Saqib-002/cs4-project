@@ -14,9 +14,10 @@ const SignInPage=(props)=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const getUser=async()=>{
-        const userStatusCode=await postUserForLogin(email,password);
-        const dialogue=document.getElementById("dialogue");
-        if(userStatusCode===200){
+        const user=await postUserForLogin(email,password);
+        console.log(user);
+        const dialogue=document.getElementById("dialogue"); 
+        if(user[1]===200){
             dialogue.classList.add("text-green-700");
             dialogue.classList.add("bg-green-200");
             dialogue.classList.remove("text-red-700");
