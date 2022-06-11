@@ -9,11 +9,11 @@ import HomePage from "./pages/homePage";
 
 
 function App() {
-  const [isSignedIn,setIsSignedIn]=useState(false);
+  const [isSignedIn,setIsSignedIn]=useState(true);
   const [currentUser,setCurrentUser]=useState({});
   return (
     <>
-        <Header isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} setCurrentUser={setCurrentUser} currentUser={currentUser}/>
+        {isSignedIn?"":<Header/>}
       <Routes>
           <Route exact path="/" element={isSignedIn?<Navigate to="/home"/>:<LandingPage/>}/>
           <Route exact path="/sign-in" element={isSignedIn?<Navigate to="/home"/>:<SignInPage setCurrentUser={setCurrentUser} setIsSignedIn={setIsSignedIn}/>}
@@ -22,7 +22,7 @@ function App() {
           />
           <Route exact path="/home" element={isSignedIn?<HomePage/>:<Navigate to="/"/>}/>
       </Routes>
-        <Footer/>
+        {isSignedIn?"":<Footer/>}
     </>
   );
 }

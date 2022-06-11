@@ -21,6 +21,12 @@
         .box-shadow-custom{
           box-shadow: 0px 5px 0px darkblue,0px 0px 10px black;
         }
+        .box-shadow-custom-2{
+          box-shadow: 5px 0px 10px black;
+        }
+        .box-shadow-custom-3{
+          box-shadow: 1px 0px 2px black;
+        }
         .form-input-label {
           color: $sub-color;
           font-size: 16px;
@@ -40,6 +46,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  
   box-sizing: border-box;
 }
 
