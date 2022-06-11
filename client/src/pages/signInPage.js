@@ -1,39 +1,44 @@
-import React from "react";
+import React,{ useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../component/Input";
 import CustomButton from "../component/customButton";
-import { useState } from "react";
 import {ReactComponent as EmailLogo} from "../assets/email.svg"
 import {ReactComponent as PassShowLogo} from "../assets/eye-password-show.svg"
 import {ReactComponent as PassHideLogo} from "../assets/eye-password-hide.svg"
 
-import {getUserForLogin} from "../requests"
+import {postUserForLogin} from "../requests"
+import {togglePassIcon} from "./utils.pages"
 
 
-const SignInPage=()=>{
+const SignInPage=(props)=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
-    const getUser=()=>{
-        const user=getUserForLogin(email,password);
-        console.log(user);
-    }
-    const togglePassIcon=(e)=>{
-        const element=e.target.parentElement.parentElement;
-        element.classList.add("invisible");
-        element.classList.remove("visible");
-        if(element.classList.contains("passShow")){
-            const passElem=element.nextElementSibling.nextElementSibling;
-            const elemNextSibling=element.nextElementSibling;
-            elemNextSibling.classList.add("visible");
-            elemNextSibling.classList.remove("invisible");
-            passElem.type="text"
+    const getUser=async()=>{
+        const userStatusCode=await postUserForLogin(email,password);
+        const dialogue=document.getElementById("dialogue");
+        if(userStatusCode===200){
+            dialogue.classList.add("text-green-700");
+            dialogue.classList.add("bg-green-200");
+            dialogue.classList.remove("text-red-700");
+            dialogue.classList.remove("bg-red-200");
+            dialogue.innerText="Successfully login"
+            props.setIsSignedIn(true);
         }else{
-            const elemPreviousSibling=element.previousElementSibling;
-            const passElem=element.nextElementSibling;
-            elemPreviousSibling.classList.add("visible");
-            elemPreviousSibling.classList.remove("invisible");
-            passElem.type="password"
+            dialogue.classList.remove("text-green-700");
+            dialogue.classList.remove("bg-green-200");
+            dialogue.innerText="Invalid email or address"
+            dialogue.classList.add("text-red-700");
+            dialogue.classList.add("bg-red-200");
         }
+        dialogue.classList.add("visible");
+        dialogue.classList.remove("invisible");
+        setTimeout(() => {
+            dialogue.classList.add("invisible");
+            dialogue.classList.remove("visible");
+        }, 1000);
+    }
+    const toggle_PassIcon=(e)=>{
+        togglePassIcon(e);
     }
     const handleChange=(e)=>{
         const {name}=e.target;
@@ -45,13 +50,14 @@ const SignInPage=()=>{
     }
     return(
     <>
-        <div className="h-[87vh] flex justify-center flex-col items-center text-white bg-blue-300 ">
+        <div className="h-[87vh] flex justify-center flex-col items-center text-white bg-blue-300 relative">
             {/* sign-in div */}
             <div className="bg-transparent rounded-xl border-4 bg-blue-500 border-blue-700 h-[60vh] w-[50vw] flex justify-center flex-col items-center box-shadow-custom">
+                <span id="dialogue" className="w-full text-center invisible">Successfully login</span>
                 <h1 className="font-bold text-2xl">Welcome back</h1>
                 <span>We're so exited to see you again!</span>
                 <Input label={"Email"} logo1={<EmailLogo className="h-6 absolute top-2 left-[27vw] text-white fill-white"/>} type="email" name="email" handleChange={handleChange} value={email}/>
-                <Input label={"Password"} logo1={<PassShowLogo onClick={togglePassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} logo2={<PassHideLogo onClick={togglePassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} type="password" name="password" handleChange={handleChange} value={password}/>
+                <Input label={"Password"} logo1={<PassShowLogo onClick={toggle_PassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} logo2={<PassHideLogo onClick={toggle_PassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} type="password" name="password" handleChange={handleChange} value={password}/>
                 <div className="w-96">
                     <CustomButton onClick={getUser}>Log In</CustomButton>
                 </div>

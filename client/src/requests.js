@@ -1,7 +1,6 @@
 const API_URL="http://localhost:8000";
 
-export const getUserForLogin=async(email,password)=>{
-    console.log(email,password);
+export const postUserForLogin=async(email,password)=>{
     const response=await fetch(`${API_URL}/sign-in`,{
         method: 'POST',
         headers: {
@@ -9,8 +8,18 @@ export const getUserForLogin=async(email,password)=>{
         },
         body: JSON.stringify({email,password})
     });
-    return response;
+    return await response.status;
+} 
+export const postUserForRegister=async(email,password,username,day,month,year)=>{
+    const response=await fetch(`${API_URL}/register`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email,password,username,day,month,year})
+    });
+    return [await response.json(),response.status];
 } 
 
 
-export default getUserForLogin;
+export default postUserForLogin;

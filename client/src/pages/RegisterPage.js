@@ -1,33 +1,68 @@
-import React from "react";
+import React,{ useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../component/Input";
 import CustomButton from "../component/customButton";
-import { useState } from "react";
 import {ReactComponent as EmailLogo} from "../assets/email.svg"
 import {ReactComponent as PassShowLogo} from "../assets/eye-password-show.svg"
 import {ReactComponent as PassHideLogo} from "../assets/eye-password-hide.svg"
 import {ReactComponent as UserNameLogo} from "../assets/username.svg"
-
+import {togglePassIcon} from "./utils.pages"
+import { postUserForRegister } from "../requests";
 
 
 const RegisterPage=()=>{
-    const togglePassIcon=(e)=>{
-        const element=e.target.parentElement.parentElement;
-        element.classList.add("invisible");
-        element.classList.remove("visible");
-        if(element.classList.contains("passShow")){
-            const passElem=element.nextElementSibling.nextElementSibling;
-            const elemNextSibling=element.nextElementSibling;
-            elemNextSibling.classList.add("visible");
-            elemNextSibling.classList.remove("invisible");
-            passElem.type="text"
-        }else{
-            const elemPreviousSibling=element.previousElementSibling;
-            const passElem=element.nextElementSibling;
-            elemPreviousSibling.classList.add("visible");
-            elemPreviousSibling.classList.remove("invisible");
-            passElem.type="password"
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
+    const [userName,setUserName]=useState("");
+    const [month,setMonth]=useState("");
+    const [day,setDay]=useState("");
+    const [year,setYear]=useState("");
+    const regexforPassword=/(\w+\d+\W+){1}|(\w+\W+\d+){1}|(\d+\w+\W+){1}|(\d+\W+\w+){1}|(\W+\w+\d+){1}|(\W+\d+\w+){1}|(\d+\w+\W+){1}|(\d+\W+\w+){1}/;
+    //1,2,3
+    //1,3,2
+    //2,1,3
+    //2,3,1
+    //3,1,2
+    //3,2,1
+    //2,1,3
+    //2,3,1
+
+
+    const postUser= async()=>{
+        let dialoguebox=document.getElementById("dialogue");
+        dialoguebox.classList.remove("hidden");
+        dialoguebox.classList.add("bg-red-200");
+        dialoguebox.classList.add("text-red-800");
+        if(userName===""){
+            dialoguebox.firstChild.innerText="Username can't be empty";
+        }else if(email===""){
+            dialoguebox.firstChild.innerText="Email field can't be empty";
+        }else if(password===""){
+            dialoguebox.firstChild.innerText="Password can't be empty";
+        }else if(password.length<8){
+            dialoguebox.firstChild.innerText="Password should be atleat length of 8 characters";
+        }else if(!regexforPassword.test(password)){
+            dialoguebox.firstChild.innerText="Password should contain atleast one number,letter and special character";
         }
+        else{
+            const response= await postUserForRegister(email,password,userName,day,month,year);
+            if(response[1]===409&&response[0].error==="un_username"){
+                dialoguebox.firstChild.innerText="Username already taken by someone!!!";
+            }else if(response[1]===409&&response[0].error==="un_email"){
+                dialoguebox.firstChild.innerText="Email is already in use!!!";
+            }
+            if(response[1]===201){
+                dialoguebox.classList.remove("bg-red-200");
+                dialoguebox.classList.remove("text-red-800");
+                dialoguebox.classList.add("bg-green-200");
+                dialoguebox.classList.add("text-green-800");
+                dialoguebox.firstChild.innerText="Successfully Registered";
+            }
+        }
+    }
+    const toggle_PassIcon=(e)=>{
+        
+            togglePassIcon(e);
     }
     const handleChange=(e)=>{
         const {name}=e.target;
@@ -39,12 +74,6 @@ const RegisterPage=()=>{
             setPassword(e.target.value);
         }
     }
-    const [email,setEmail]=useState("");
-    const [password,setPassword]=useState("");
-    const [userName,setUserName]=useState("");
-    const [month,setMonth]=useState("");
-    const [day,setDay]=useState("");
-    const [year,setYear]=useState("");
     const onChangeMonth=(e)=>{
         setMonth(e.target.value);
     }
@@ -71,10 +100,17 @@ const RegisterPage=()=>{
     for (let i=1990;i<=2050;i++) {
         no_of_years.push(<option key={i} value={i}>{i}</option>);
     }
+    const closeDialogue=()=>{
+        document.getElementById("dialogue").classList.add('hidden');
+    }
     return(
     <>
-        <div className="h-[87vh] flex justify-center flex-col items-center text-white bg-blue-300 ">
+        <div className="h-[100vh] flex justify-center flex-col items-center text-white bg-blue-300 ">
             {/* register div */}
+                <p id="dialogue" className="w-[99.5%]  rounded-lg h-16 flex items-center justify-between px-4 my-4 hidden">
+                    <span>Successfully register</span> <span className="text-2xl mr-3 text-black cursor-pointer hover:text-red-600" onClick={closeDialogue}>X</span></p>
+                <div></div>
+            
             <div className="bg-transparent rounded-xl border-4 bg-blue-500 border-blue-700 h-[80vh] w-[50vw] flex justify-center flex-col items-center box-shadow-custom">
                 <h1 className="font-bold text-2xl">Create an account</h1>
                 <Input label={"Email"} logo1={<EmailLogo className="h-6 absolute top-2 left-[27vw] text-white fill-white"/>} type="email" name="email" handleChange={handleChange} value={email}/>
@@ -113,13 +149,13 @@ const RegisterPage=()=>{
                         </select>
                     </div>
                 </div>
-                <Input label={"Password"} logo1={<PassShowLogo onClick={togglePassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} logo2={<PassHideLogo onClick={togglePassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} type="password" name="password" handleChange={handleChange} value={password}/>
+                <Input label={"Password"} logo1={<PassShowLogo onClick={toggle_PassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} logo2={<PassHideLogo onClick={toggle_PassIcon} className="h-6 absolute top-2 left-[27vw] text-white fill-white cursor-pointer"/>} type="password" name="password" handleChange={handleChange} value={password}/>
                 <div className="w-96">
-                    <CustomButton>Register</CustomButton>
+                    <CustomButton onClick={postUser}>Register</CustomButton>
                 </div>
                 <div className="flex w-96 my-2">
                     <span>Already have an account?</span>
-                    <Link to="/register">
+                    <Link to="/sign-in">
                         <span className="mx-4 underline text-slate-300 cursor-pointer hover:text-white">Log In</span>
                     </Link>
                 </div>
