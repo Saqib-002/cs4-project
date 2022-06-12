@@ -1,8 +1,8 @@
 import React from "react";
-import ServerPanel from "../component/serverPanel";
-import ChannelPanel from "../component/channelPanel";
-import ChatPanel from "../component/chatpanel";
-import MemberPanel from "../component/memberPanel";
+import ServerPanel from "../component/server/serverPanel";
+import ChannelPanel from "../component/channel/channelPanel";
+import ChatPanel from "../component/chat/chatpanel";
+import MemberPanel from "../component/member/memberPanel";
 
 const HomePage=()=>{
     return (
